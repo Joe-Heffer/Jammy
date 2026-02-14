@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { songs } from "@/lib/db/schema";
-import { eq, asc, desc } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 /**
  * GET /api/songs
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
           { status: 400 }
         );
       }
-      query = query.where(eq(songs.status, status as any));
+      query = query.where(eq(songs.status, status as "want_to_jam" | "learning" | "can_play" | "nailed_it"));
     }
 
     // Apply sorting
