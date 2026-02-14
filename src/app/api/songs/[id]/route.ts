@@ -88,7 +88,7 @@ export async function PATCH(
 
     // Prepare update data - only allow specific fields to be updated
     const updateData: Record<string, unknown> = {
-      updatedAt: new Date().toISOString(),
+      updatedAt: new Date(),
     };
 
     // Allowed fields for update
