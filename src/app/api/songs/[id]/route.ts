@@ -87,7 +87,7 @@ export async function PATCH(
     }
 
     // Prepare update data - only allow specific fields to be updated
-    const updateData: Partial<typeof songs.$inferInsert> = {
+    const updateData: Record<string, unknown> = {
       updatedAt: new Date().toISOString(),
     };
 
@@ -105,7 +105,7 @@ export async function PATCH(
       "songsterrBassId",
       "songsterrDrumId",
       "geniusUrl",
-    ];
+    ] as const;
 
     for (const field of allowedFields) {
       if (field in body) {
