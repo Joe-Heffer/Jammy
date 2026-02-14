@@ -37,6 +37,8 @@ Music jam session playlist planner and music exploration app.
 
    ```bash
    pnpm db:push
+   # or using npm
+   npm run db:push
    ```
 
 5. Start the development server:
@@ -51,6 +53,8 @@ This app uses PostgreSQL (Neon) with Drizzle ORM. The database connection is req
 - **Schema**: `src/lib/db/schema.ts`
 - **Database client**: `src/lib/db/index.ts`
 - **Migrations**: Run `pnpm db:push` to sync schema changes
+
+**Troubleshooting?** See [DATABASE_SETUP.md](./DATABASE_SETUP.md) for detailed setup instructions, local PostgreSQL setup, and common issues.
 
 ### API Endpoints
 
