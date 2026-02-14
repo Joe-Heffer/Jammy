@@ -1,4 +1,7 @@
+[![Deploy](https://github.com/Joe-Heffer/Jammy/actions/workflows/deploy.yml/badge.svg)](https://github.com/Joe-Heffer/Jammy/actions/workflows/deploy.yml)
+
 # Jammy
+
 Music jam session playlist planner and music exploration app.
 
 ## Getting Started
@@ -11,11 +14,13 @@ Music jam session playlist planner and music exploration app.
 ### Setup
 
 1. Clone the repository and install dependencies:
+
    ```bash
    pnpm install
    ```
 
 2. Set up your environment variables:
+
    ```bash
    cp .env.example .env.local
    ```
@@ -23,11 +28,13 @@ Music jam session playlist planner and music exploration app.
 3. **Important:** Edit `.env.local` and set your `DATABASE_URL` to a valid PostgreSQL connection string. The app requires PostgreSQL (Neon) for both development and production.
 
    Example:
+
    ```
    DATABASE_URL=postgresql://user:password@host.neon.tech/jammy?sslmode=require
    ```
 
 4. Run database migrations:
+
    ```bash
    pnpm db:push
    ```
