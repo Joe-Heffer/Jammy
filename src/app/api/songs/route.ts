@@ -13,20 +13,6 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status");
     const sortBy = searchParams.get("sortBy") || "createdAt";
 
-    let query = db.select().from(songs);
-
-    // Filter by status if provided
-    if (status) {
-      const validStatuses = ["want_to_jam", "learning", "can_play", "nailed_it"];
-      if (!validStatuses.includes(status)) {
-        return NextResponse.json(
-          { error: "Invalid status value" },
-          { status: 400 }
-        );
-      }
-      query = query.where(eq(songs.status, status as "want_to_jam" | "learning" | "can_play" | "nailed_it"));
-    }
-
     // Apply sorting
     let orderColumn;
     switch (sortBy) {
@@ -42,7 +28,27 @@ export async function GET(request: NextRequest) {
         break;
     }
 
-    const allSongs = await query.orderBy(desc(orderColumn));
+    // Build query with optional filter
+    let allSongs;
+    if (status) {
+      const validStatuses = ["want_to_jam", "learning", "can_play", "nailed_it"];
+      if (!validStatuses.includes(status)) {
+        return NextResponse.json(
+          { error: "Invalid status value" },
+          { status: 400 }
+        );
+      }
+      allSongs = await db
+        .select()
+        .from(songs)
+        .where(eq(songs.status, status as "want_to_jam" | "learning" | "can_play" | "nailed_it"))
+        .orderBy(desc(orderColumn));
+    } else {
+      allSongs = await db
+        .select()
+        .from(songs)
+        .orderBy(desc(orderColumn));
+    }
 
     return NextResponse.json(allSongs, {
       status: 200,
