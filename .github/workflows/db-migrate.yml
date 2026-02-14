@@ -1,7 +1,6 @@
-name: Database Migration
+name: Database Schema Validation
 
 on:
-  workflow_dispatch: # Allow manual trigger
   push:
     branches:
       - main
@@ -9,12 +8,18 @@ on:
       - 'src/lib/db/schema.ts'
       - 'drizzle/**'
       - '.github/workflows/db-migrate.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/lib/db/schema.ts'
+      - 'drizzle/**'
 
 permissions:
   contents: read
 
 jobs:
-  migrate:
+  validate-schema:
     runs-on: ubuntu-24.04
 
     steps:
@@ -48,10 +53,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Apply database schema
-        run: pnpm db:push
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
-      - name: Migration complete
-        run: echo "✅ Database schema applied successfully"
+      - name: Validate schema and check migrations
+        run: |
+          echo "Validating database schema..."
+          pnpm exec drizzle-kit check
+          echo "✅ Schema validation passed - migrations are in sync with schema"
