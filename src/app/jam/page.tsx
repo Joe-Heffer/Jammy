@@ -74,10 +74,10 @@ export default function JamDashboard() {
                 + Add Song
               </Link>
               <Link
-                href="/jam/discover"
+                href="/discover"
                 className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-lg transition-all"
               >
-                🔍 Discover
+                Discover
               </Link>
             </div>
           </div>
