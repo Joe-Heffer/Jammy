@@ -40,7 +40,7 @@ export default function JamDashboard() {
         }
 
         const data = await response.json();
-        setSongs(data.songs || []);
+        setSongs(data);
       } catch (err) {
         console.error('Error fetching songs:', err);
         setError(err instanceof Error ? err.message : 'Failed to load songs');
