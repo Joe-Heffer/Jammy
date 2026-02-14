@@ -5,7 +5,7 @@ import { sql } from "drizzle-orm";
  * Songs table — the core of Jammy.
  *
  * Local dev uses SQLite (better-sqlite3) via conditional logic in db/index.ts.
- * Production uses Vercel Postgres.
+ * Production uses Neon Postgres (Vercel Postgres migrated to Neon).
  * Schema is PostgreSQL-compatible for both environments.
  */
 export const songs = pgTable("songs", {
