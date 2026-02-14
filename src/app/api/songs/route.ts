@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { songs } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 
 /**
  * GET /api/songs
@@ -90,6 +90,25 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
+    }
+
+    // Check for duplicate (same title + artist)
+    const existing = await db
+      .select()
+      .from(songs)
+      .where(
+        and(
+          eq(songs.title, body.title),
+          eq(songs.artist, body.artist)
+        )
+      )
+      .limit(1);
+
+    if (existing.length > 0) {
+      return NextResponse.json(
+        { error: "This song already exists in your jam list", existingSong: existing[0] },
+        { status: 409 }
+      );
     }
 
     // Prepare song data
