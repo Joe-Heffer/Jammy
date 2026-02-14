@@ -544,6 +544,144 @@ Live at jammy.vercel.app (or custom domain)
 
 ---
 
+## Local Development
+
+### SQLite for Dev, Neon Postgres for Prod
+
+Local development uses **SQLite** via `better-sqlite3` for zero-setup iteration.
+Production will use **Neon Postgres** via `@neondatabase/serverless`.
+
+```
+Local dev:   SQLite (better-sqlite3) → local.db file
+Production:  Neon Postgres            → DATABASE_URL env var
+```
+
+The Drizzle schema lives in `src/lib/db/schema.ts` (currently `sqlite-core`).
+When deploying to production, migrate it to `pg-core` — see Iteration 2 below.
+
+### Getting Started
+
+```bash
+pnpm install
+pnpm db:push          # Create SQLite tables from schema
+pnpm dev              # Start Next.js dev server at localhost:3000
+```
+
+### Useful Commands
+
+```bash
+pnpm db:generate      # Generate migration files from schema changes
+pnpm db:migrate       # Run pending migrations
+pnpm db:studio        # Open Drizzle Studio (visual DB browser)
+pnpm lint             # Run ESLint
+pnpm build            # Production build
+```
+
+---
+
+## Implementation Roadmap
+
+### Current State (Iteration 0) — Infrastructure
+
+What's been built:
+
+- [x] Project initialized (Next.js 15, TypeScript, Tailwind v4, pnpm)
+- [x] Drizzle ORM configured with SQLite for local dev
+- [x] `songs` table schema with full column set and type exports
+- [x] Rock/metal theme tokens in Tailwind (`globals.css`)
+- [x] Root layout with Inter (body) + Oswald (headings) fonts
+- [x] Placeholder landing page
+- [x] Environment variable template (`.env.example`)
+- [x] Vercel deployment config
+
+### Iteration 1 — Core CRUD + Auth
+
+**Goal:** A working app where you can add, view, edit, and delete songs behind a PIN.
+
+- [ ] **PIN auth flow**
+  - `src/lib/auth.ts` — PIN verification + cookie signing helpers
+  - `src/app/api/auth/route.ts` — POST endpoint (verify PIN → set session cookie)
+  - `src/middleware.ts` — Protect `/jam/*` and `/discover/*` routes
+  - `src/components/PinEntry.tsx` — PIN input screen on `/`
+- [ ] **Songs CRUD API**
+  - `src/app/api/songs/route.ts` — GET (list all), POST (create)
+  - `src/app/api/songs/[id]/route.ts` — GET, PATCH (update status/notes), DELETE
+- [ ] **Jam List page** (`/jam`)
+  - `src/components/SongCard.tsx` — Song card with cover art, status, quick links
+  - `src/components/JamList.tsx` — Filterable/sortable grid of song cards
+  - `src/components/StatusBadge.tsx` — Color-coded status indicator
+  - `src/app/jam/page.tsx` — Dashboard wired to the songs API
+- [ ] **Add Song page** (`/jam/add`)
+  - Manual-only form initially (Spotify search comes in Iteration 3)
+  - Title, artist, album, YouTube URL, status, difficulty, notes, added_by
+- [ ] **Base UI components** (`src/components/ui/`)
+  - Button, Card, Input, Badge — styled to the rock/metal theme
+
+### Iteration 2 — Production Database
+
+**Goal:** Deploy to Vercel with Neon Postgres.
+
+- [ ] **Migrate schema** from `sqlite-core` → `pg-core`
+  - `id` becomes `uuid().primaryKey().defaultRandom()`
+  - `createdAt`/`updatedAt` become `timestamp({ withTimezone: true })`
+  - Update `drizzle.config.ts` dialect to `"postgresql"`
+- [ ] **Swap DB connection** in `src/lib/db/index.ts`
+  - Use `@neondatabase/serverless` driver
+  - Conditional: SQLite for `NODE_ENV=development`, Neon for production
+- [ ] **Run initial migration** on Neon via `pnpm db:push`
+- [ ] **Set env vars** in Vercel dashboard
+- [ ] **Deploy** — push to `main`, verify on Vercel
+
+### Iteration 3 — Spotify Search Integration
+
+**Goal:** Search Spotify to add songs with rich metadata auto-populated.
+
+- [ ] `src/lib/spotify.ts` — Client Credentials auth + search endpoint
+- [ ] `src/app/api/search/spotify/route.ts` — Proxy Spotify search
+- [ ] `src/components/SpotifySearch.tsx` — Type-ahead search, pick from results
+- [ ] Update Add Song page to use Spotify search with manual fallback
+- [ ] Auto-populate: title, artist, album, cover art, Spotify URL/ID
+
+### Iteration 4 — Resource Links (Tabs, Lyrics, YouTube)
+
+**Goal:** Surface bass tabs, drum charts, lyrics, and YouTube videos per song.
+
+- [ ] `src/lib/songsterr.ts` — Search Songsterr for bass/drum tabs
+- [ ] `src/lib/genius.ts` — Search Genius for lyrics page links
+- [ ] `src/lib/youtube.ts` — Search YouTube for play-along/tutorial videos
+- [ ] `src/app/api/resources/tabs/route.ts` — Songsterr search proxy
+- [ ] `src/app/api/resources/lyrics/route.ts` — Genius search proxy
+- [ ] `src/app/api/search/youtube/route.ts` — YouTube search proxy
+- [ ] **Song Detail page** (`/jam/[id]`)
+  - `src/components/SongDetail.tsx` — Full song view
+  - `src/components/TabViewer.tsx` — Songsterr tab link/embed
+  - `src/components/LyricsPanel.tsx` — Genius lyrics link
+  - `src/components/YouTubeEmbed.tsx` — Embedded YouTube player
+- [ ] Auto-fetch resources on song add (background, non-blocking)
+
+### Iteration 5 — Discover (Recommendations)
+
+**Goal:** Suggest new songs to jam based on what's already in the list.
+
+- [ ] `src/lib/lastfm.ts` — `track.getSimilar` + `artist.getSimilar`
+- [ ] `src/app/api/discover/route.ts` — Aggregate recommendations
+- [ ] `src/components/RecommendationCard.tsx` — Suggested song with "Add" action
+- [ ] `src/app/discover/page.tsx` — Discovery feed grouped by seed artist
+
+### Iteration 6 — Polish + PWA
+
+**Goal:** Tighten the UX, add the finishing touches.
+
+- [ ] Grain texture overlay (`public/grain.png`)
+- [ ] Song card hover glow effects
+- [ ] Status badge animations (pulsing dot, fire icon)
+- [ ] Mobile-responsive layout tuning
+- [ ] `manifest.json` for PWA installability
+- [ ] Nav component (`src/components/Nav.tsx`)
+- [ ] Loading states and error boundaries
+
+---
+
 ## Future Ideas (Not in v1)
 
 - **Setlist mode**: Arrange songs into a practice setlist with a timer
