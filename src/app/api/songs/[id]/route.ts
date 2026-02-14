@@ -93,6 +93,9 @@ export async function PATCH(
 
     // Allowed fields for update
     const allowedFields = [
+      "title",
+      "artist",
+      "album",
       "status",
       "notes",
       "bassDifficulty",

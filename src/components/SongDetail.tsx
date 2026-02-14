@@ -71,6 +71,9 @@ export function SongDetail({ songId }: SongDetailProps) {
 
   // Editing state
   const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState('');
+  const [editArtist, setEditArtist] = useState('');
+  const [editAlbum, setEditAlbum] = useState('');
   const [editStatus, setEditStatus] = useState<SongStatus>('want_to_jam');
   const [editBassDifficulty, setEditBassDifficulty] = useState<Difficulty | ''>('');
   const [editDrumsDifficulty, setEditDrumsDifficulty] = useState<Difficulty | ''>('');
@@ -112,6 +115,9 @@ export function SongDetail({ songId }: SongDetailProps) {
 
   function startEditing() {
     if (!song) return;
+    setEditTitle(song.title);
+    setEditArtist(song.artist);
+    setEditAlbum(song.album ?? '');
     setEditStatus(song.status);
     setEditBassDifficulty(song.bassDifficulty ?? '');
     setEditDrumsDifficulty(song.drumsDifficulty ?? '');
@@ -126,11 +132,19 @@ export function SongDetail({ songId }: SongDetailProps) {
   }
 
   async function handleSave() {
+    if (!editTitle.trim() || !editArtist.trim()) {
+      setSaveError('Title and artist are required');
+      return;
+    }
+
     setIsSaving(true);
     setSaveError(null);
 
     try {
       const body: Record<string, unknown> = {
+        title: editTitle.trim(),
+        artist: editArtist.trim(),
+        album: editAlbum.trim() || null,
         status: editStatus,
         notes: editNotes || null,
         bassDifficulty: editBassDifficulty || null,
@@ -317,6 +331,31 @@ export function SongDetail({ songId }: SongDetailProps) {
                   <p className="text-red-400 text-sm font-medium">{saveError}</p>
                 </div>
               )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Input
+                  label="Title"
+                  name="title"
+                  placeholder="Song title"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                />
+                <Input
+                  label="Artist"
+                  name="artist"
+                  placeholder="Artist name"
+                  value={editArtist}
+                  onChange={(e) => setEditArtist(e.target.value)}
+                />
+              </div>
+
+              <Input
+                label="Album"
+                name="album"
+                placeholder="Album name"
+                value={editAlbum}
+                onChange={(e) => setEditAlbum(e.target.value)}
+              />
 
               <Input
                 variant="select"
