@@ -1,17 +1,16 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
+import { pgTable, text, integer, uuid, timestamp, index } from "drizzle-orm/pg-core";
 
 /**
  * Songs table — the core of Jammy.
  *
- * Local dev uses SQLite (better-sqlite3).
- * Production will use Neon Postgres (schema migrated to pg-core).
- * See ARCHITECTURE.md roadmap for the migration plan.
+ * Uses PostgreSQL (Neon) for both local development and production.
+ * Vercel Postgres has migrated to Neon as a native integration.
+ * Schema uses PostgreSQL-native types (UUID, timestamps with timezone, indexes).
  */
-export const songs = sqliteTable("songs", {
-  id: text("id")
+export const songs = pgTable("songs", {
+  id: uuid("id")
     .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+    .defaultRandom(),
   title: text("title").notNull(),
   artist: text("artist").notNull(),
   album: text("album"),
@@ -44,13 +43,18 @@ export const songs = sqliteTable("songs", {
   // Metadata
   notes: text("notes"),
   addedBy: text("added_by"),
-  createdAt: text("created_at")
+  createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default(sql`(datetime('now'))`),
-  updatedAt: text("updated_at")
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .default(sql`(datetime('now'))`),
-});
+    .defaultNow(),
+}, (table) => ({
+  // PostgreSQL indexes for common queries
+  artistIdx: index("artist_idx").on(table.artist),
+  statusIdx: index("status_idx").on(table.status),
+  createdAtIdx: index("created_at_idx").on(table.createdAt),
+}));
 
 // Type exports for use across the app
 export type Song = typeof songs.$inferSelect;

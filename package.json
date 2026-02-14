@@ -13,30 +13,28 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.0",
+    "drizzle-orm": "^0.38.0",
     "next": "^15.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "drizzle-orm": "^0.38.0",
-    "better-sqlite3": "^11.7.0",
-    "@neondatabase/serverless": "^0.10.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.7.0",
+    "@eslint/eslintrc": "^3.3.3",
+    "@next/eslint-plugin-next": "^15.1.0",
+    "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/better-sqlite3": "^7.6.0",
-    "tailwindcss": "^4.0.0",
-    "@tailwindcss/postcss": "^4.0.0",
     "drizzle-kit": "^0.30.0",
-    "postcss": "^8.4.0",
-    "@next/eslint-plugin-next": "^15.1.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "^15.1.0"
+    "eslint-config-next": "^15.1.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "better-sqlite3",
       "esbuild",
       "sharp"
     ]
