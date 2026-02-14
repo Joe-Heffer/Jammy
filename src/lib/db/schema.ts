@@ -1,12 +1,11 @@
 import { pgTable, text, integer, uuid, timestamp, index } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 /**
  * Songs table — the core of Jammy.
  *
- * Local dev uses SQLite (better-sqlite3) via conditional logic in db/index.ts.
- * Production uses Neon Postgres (Vercel Postgres migrated to Neon).
- * Schema is PostgreSQL-compatible for both environments.
+ * Uses PostgreSQL (Neon) for both local development and production.
+ * Vercel Postgres has migrated to Neon as a native integration.
+ * Schema uses PostgreSQL-native types (UUID, timestamps with timezone, indexes).
  */
 export const songs = pgTable("songs", {
   id: uuid("id")

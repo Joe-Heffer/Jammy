@@ -1,7 +1,8 @@
 import { defineConfig } from "drizzle-kit";
 
-// Local dev: SQLite via local.db
-// Production: Neon Postgres via DATABASE_URL (Vercel Postgres migrated to Neon)
+// Uses Neon Postgres for both local development and production
+// Vercel Postgres has migrated to Neon as a native integration
+// Set DATABASE_URL to your Neon connection string (dev or prod)
 export default defineConfig({
   schema: "./src/lib/db/schema.ts",
   out: "./drizzle",
