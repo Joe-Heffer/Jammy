@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/*
+ * Jammy — Rock/Metal Theme
+ *
+ * Dark, aggressive aesthetic. Blood red primary, near-black backgrounds,
+ * concert-poster energy. See ARCHITECTURE.md "Visual Design" section.
+ */
+
+@theme {
+  /* Backgrounds */
+  --color-background: #0a0a0a;
+  --color-surface: #171717;
+  --color-surface-hover: #262626;
+  --color-border: #2a2a2a;
+
+  /* Brand */
+  --color-primary: #dc2626;
+  --color-primary-hover: #b91c1c;
+  --color-accent: #ea580c;
+
+  /* Status colors */
+  --color-status-want: #dc2626;
+  --color-status-learning: #f59e0b;
+  --color-status-can-play: #3b82f6;
+  --color-status-nailed: #22c55e;
+
+  /* Text */
+  --color-foreground: #f5f5f5;
+  --color-muted: #a3a3a3;
+  --color-subtle: #525252;
+
+  /* Typography */
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro", monospace;
+}
+
+/* Base resets */
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* Subtle grain texture overlay (add grain.png to public/ later) */
+/*
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("/grain.png");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 50;
+}
+*/

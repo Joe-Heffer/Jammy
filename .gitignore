@@ -137,3 +137,14 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# SQLite local dev database
+*.db
+*.db-wal
+*.db-shm
+
+# Next.js type declarations (auto-generated)
+next-env.d.ts
+
+# pnpm
+pnpm-debug.log*
