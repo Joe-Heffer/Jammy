@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { JamList } from '@/components/JamList';
+import { SpotifySync } from '@/components/SpotifySync';
 
 type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -27,30 +28,31 @@ export default function JamDashboard() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSpotifySync, setShowSpotifySync] = useState(false);
+
+  const fetchSongs = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetch('/api/songs');
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch songs: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setSongs(data);
+    } catch (err) {
+      console.error('Error fetching songs:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load songs');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchSongs = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        const response = await fetch('/api/songs');
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch songs: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        setSongs(data);
-      } catch (err) {
-        console.error('Error fetching songs:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load songs');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchSongs();
-  }, []);
+  }, [fetchSongs]);
 
   return (
     <div className="min-h-screen bg-[var(--color-background)]">
@@ -73,6 +75,12 @@ export default function JamDashboard() {
               >
                 + Add Song
               </Link>
+              <button
+                onClick={() => setShowSpotifySync(true)}
+                className="px-4 py-2 bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold rounded-lg transition-all"
+              >
+                Spotify Sync
+              </button>
               <Link
                 href="/discover"
                 className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white font-bold rounded-lg transition-all"
@@ -94,6 +102,13 @@ export default function JamDashboard() {
           <JamList songs={songs} isLoading={isLoading} />
         )}
       </main>
+
+      {showSpotifySync && (
+        <SpotifySync
+          onSynced={fetchSongs}
+          onClose={() => setShowSpotifySync(false)}
+        />
+      )}
     </div>
   );
 }
