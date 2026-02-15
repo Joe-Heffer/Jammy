@@ -6,30 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { StatusBadge } from './StatusBadge';
 import { Button, Input } from '@/components/ui';
-
-type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
-type Difficulty = 'easy' | 'medium' | 'hard';
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  album: string | null;
-  status: SongStatus;
-  bassDifficulty: Difficulty | null;
-  drumsDifficulty: Difficulty | null;
-  coverArtUrl: string | null;
-  spotifyUrl: string | null;
-  youtubeUrl: string | null;
-  songsterrUrl: string | null;
-  songsterrBassId: number | null;
-  songsterrDrumId: number | null;
-  geniusUrl: string | null;
-  notes: string | null;
-  addedBy: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Song, SongStatus, Difficulty } from '@/lib/types';
 
 interface SongDetailProps {
   songId: string;
@@ -78,6 +55,7 @@ export function SongDetail({ songId }: SongDetailProps) {
   const [editBassDifficulty, setEditBassDifficulty] = useState<Difficulty | ''>('');
   const [editDrumsDifficulty, setEditDrumsDifficulty] = useState<Difficulty | ''>('');
   const [editNotes, setEditNotes] = useState('');
+  const [editChordChartUrl, setEditChordChartUrl] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -122,6 +100,7 @@ export function SongDetail({ songId }: SongDetailProps) {
     setEditBassDifficulty(song.bassDifficulty ?? '');
     setEditDrumsDifficulty(song.drumsDifficulty ?? '');
     setEditNotes(song.notes ?? '');
+    setEditChordChartUrl(song.chordChartUrl ?? '');
     setSaveError(null);
     setIsEditing(true);
   }
@@ -149,6 +128,7 @@ export function SongDetail({ songId }: SongDetailProps) {
         notes: editNotes || null,
         bassDifficulty: editBassDifficulty || null,
         drumsDifficulty: editDrumsDifficulty || null,
+        chordChartUrl: editChordChartUrl.trim() || null,
       };
 
       const response = await fetch(`/api/songs/${songId}`, {
@@ -236,6 +216,7 @@ export function SongDetail({ songId }: SongDetailProps) {
     { url: song.youtubeUrl, label: 'YouTube', hoverColor: 'hover:bg-[#FF0000]' },
     { url: song.songsterrUrl, label: 'Tabs', hoverColor: 'hover:bg-[var(--color-accent)]' },
     { url: song.geniusUrl, label: 'Lyrics', hoverColor: 'hover:bg-[var(--color-accent)]' },
+    { url: song.chordChartUrl, label: 'Chords', hoverColor: 'hover:bg-[#8B5CF6]' },
   ].filter((link) => link.url);
 
   return (
@@ -392,6 +373,15 @@ export function SongDetail({ songId }: SongDetailProps) {
                 placeholder="Any notes about this song..."
                 value={editNotes}
                 onChange={(e) => setEditNotes(e.target.value)}
+              />
+
+              <Input
+                label="Chord Chart URL"
+                name="chordChartUrl"
+                type="url"
+                placeholder="https://..."
+                value={editChordChartUrl}
+                onChange={(e) => setEditChordChartUrl(e.target.value)}
               />
 
               <div className="flex gap-3 justify-end pt-2 border-t border-[var(--color-border)]">

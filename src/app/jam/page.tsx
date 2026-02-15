@@ -4,25 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { JamList } from '@/components/JamList';
 import { SpotifySync } from '@/components/SpotifySync';
-
-type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
-type Difficulty = 'easy' | 'medium' | 'hard';
-
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  album: string | null;
-  status: SongStatus;
-  bassDifficulty: Difficulty | null;
-  drumsDifficulty: Difficulty | null;
-  coverArtUrl: string | null;
-  spotifyUrl: string | null;
-  youtubeUrl: string | null;
-  songsterrUrl: string | null;
-  geniusUrl: string | null;
-  createdAt: string;
-}
+import type { Song } from '@/lib/types';
 
 export default function JamDashboard() {
   const [songs, setSongs] = useState<Song[]>([]);

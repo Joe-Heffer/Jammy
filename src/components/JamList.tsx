@@ -2,25 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { SongCard } from './SongCard';
-
-type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
-type Difficulty = 'easy' | 'medium' | 'hard';
-
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  album: string | null;
-  status: SongStatus;
-  bassDifficulty: Difficulty | null;
-  drumsDifficulty: Difficulty | null;
-  coverArtUrl: string | null;
-  spotifyUrl: string | null;
-  youtubeUrl: string | null;
-  songsterrUrl: string | null;
-  geniusUrl: string | null;
-  createdAt: string;
-}
+import type { Song, SongStatus } from '@/lib/types';
 
 interface JamListProps {
   songs: Song[];

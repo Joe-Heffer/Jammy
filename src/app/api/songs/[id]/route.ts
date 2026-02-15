@@ -108,6 +108,7 @@ export async function PATCH(
       "songsterrBassId",
       "songsterrDrumId",
       "geniusUrl",
+      "chordChartUrl",
     ] as const;
 
     for (const field of allowedFields) {
