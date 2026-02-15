@@ -4,25 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { StatusBadge } from './StatusBadge';
-
-type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
-type Difficulty = 'easy' | 'medium' | 'hard';
-
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  album: string | null;
-  status: SongStatus;
-  bassDifficulty: Difficulty | null;
-  drumsDifficulty: Difficulty | null;
-  coverArtUrl: string | null;
-  spotifyUrl: string | null;
-  youtubeUrl: string | null;
-  songsterrUrl: string | null;
-  geniusUrl: string | null;
-  chordChartUrl: string | null;
-}
+import type { Song, Difficulty } from '@/lib/types';
 
 interface SongCardProps {
   song: Song;

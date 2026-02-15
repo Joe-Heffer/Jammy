@@ -3,9 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/ui';
-
-type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
-type Difficulty = 'easy' | 'medium' | 'hard';
+import type { SongStatus, Difficulty } from '@/lib/types';
 
 interface FormData {
   title: string;

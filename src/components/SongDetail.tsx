@@ -6,31 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { StatusBadge } from './StatusBadge';
 import { Button, Input } from '@/components/ui';
-
-type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
-type Difficulty = 'easy' | 'medium' | 'hard';
-
-interface Song {
-  id: string;
-  title: string;
-  artist: string;
-  album: string | null;
-  status: SongStatus;
-  bassDifficulty: Difficulty | null;
-  drumsDifficulty: Difficulty | null;
-  coverArtUrl: string | null;
-  spotifyUrl: string | null;
-  youtubeUrl: string | null;
-  songsterrUrl: string | null;
-  songsterrBassId: number | null;
-  songsterrDrumId: number | null;
-  geniusUrl: string | null;
-  chordChartUrl: string | null;
-  notes: string | null;
-  addedBy: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { Song, SongStatus, Difficulty } from '@/lib/types';
 
 interface SongDetailProps {
   songId: string;

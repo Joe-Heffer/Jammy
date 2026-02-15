@@ -1,6 +1,5 @@
 import React from 'react';
-
-type SongStatus = 'want_to_jam' | 'learning' | 'can_play' | 'nailed_it';
+import type { SongStatus } from '@/lib/types';
 
 interface StatusBadgeProps {
   status: SongStatus;
