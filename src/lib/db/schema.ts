@@ -39,6 +39,7 @@ export const songs = pgTable("songs", {
   songsterrBassId: integer("songsterr_bass_id"),
   songsterrDrumId: integer("songsterr_drum_id"),
   geniusUrl: text("genius_url"),
+  chordChartUrl: text("chord_chart_url"),
 
   // Metadata
   notes: text("notes"),

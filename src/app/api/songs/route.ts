@@ -127,6 +127,7 @@ export async function POST(request: NextRequest) {
       songsterrBassId: body.songsterrBassId || null,
       songsterrDrumId: body.songsterrDrumId || null,
       geniusUrl: body.geniusUrl || null,
+      chordChartUrl: body.chordChartUrl || null,
       notes: body.notes || null,
       addedBy: body.addedBy || null,
     };

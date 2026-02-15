@@ -21,6 +21,7 @@ interface Song {
   youtubeUrl: string | null;
   songsterrUrl: string | null;
   geniusUrl: string | null;
+  chordChartUrl: string | null;
 }
 
 interface SongCardProps {
@@ -145,6 +146,15 @@ export function SongCard({ song }: SongCardProps) {
                 title="View lyrics on Genius"
               >
                 Lyrics
+              </button>
+            )}
+            {song.chordChartUrl && (
+              <button
+                onClick={(e) => handleQuickAction(e, song.chordChartUrl)}
+                className="flex-1 px-2 py-1.5 bg-zinc-800 hover:bg-[#8B5CF6] rounded text-xs font-semibold transition-colors"
+                title="View chord chart"
+              >
+                Chords
               </button>
             )}
           </div>

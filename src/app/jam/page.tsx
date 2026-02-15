@@ -21,6 +21,7 @@ interface Song {
   youtubeUrl: string | null;
   songsterrUrl: string | null;
   geniusUrl: string | null;
+  chordChartUrl: string | null;
   createdAt: string;
 }
 

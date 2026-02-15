@@ -18,6 +18,7 @@ interface FormData {
   youtubeUrl: string;
   songsterrUrl: string;
   geniusUrl: string;
+  chordChartUrl: string;
   notes: string;
   addedBy: string;
 }
@@ -33,6 +34,7 @@ const initialFormData: FormData = {
   youtubeUrl: '',
   songsterrUrl: '',
   geniusUrl: '',
+  chordChartUrl: '',
   notes: '',
   addedBy: '',
 };
@@ -104,6 +106,7 @@ export function AddSongForm() {
       if (formData.youtubeUrl.trim()) body.youtubeUrl = formData.youtubeUrl.trim();
       if (formData.songsterrUrl.trim()) body.songsterrUrl = formData.songsterrUrl.trim();
       if (formData.geniusUrl.trim()) body.geniusUrl = formData.geniusUrl.trim();
+      if (formData.chordChartUrl.trim()) body.chordChartUrl = formData.chordChartUrl.trim();
       if (formData.notes.trim()) body.notes = formData.notes.trim();
       if (formData.addedBy.trim()) body.addedBy = formData.addedBy.trim();
 
@@ -245,6 +248,15 @@ export function AddSongForm() {
             placeholder="https://genius.com/..."
             value={formData.geniusUrl}
             onChange={handleChange}
+          />
+          <Input
+            label="Chord Chart URL"
+            name="chordChartUrl"
+            type="url"
+            placeholder="https://..."
+            value={formData.chordChartUrl}
+            onChange={handleChange}
+            helperText="Link to a chord chart (Ultimate Guitar, Chordify, etc.)"
           />
         </div>
       </fieldset>
