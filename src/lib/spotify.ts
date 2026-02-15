@@ -144,15 +144,23 @@ export function extractPlaylistId(input: string): string | null {
 export async function getPlaylistTracks(
   playlistId: string
 ): Promise<{ info: SpotifyPlaylistInfo; tracks: SpotifyTrack[] }> {
+  // Validate playlist ID is strictly alphanumeric to prevent SSRF
+  if (!/^[a-zA-Z0-9]+$/.test(playlistId)) {
+    throw new Error("Invalid playlist ID");
+  }
+
   const token = await getAccessToken();
 
   // Fetch playlist with first page of tracks
-  const response = await fetch(
-    `${SPOTIFY_API_BASE}/playlists/${playlistId}?fields=name,description,images,tracks(items(track(id,name,artists(name),album(name,images),external_urls)),next,total)`,
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
+  const url = new URL(`${SPOTIFY_API_BASE}/playlists/${playlistId}`);
+  url.searchParams.set(
+    "fields",
+    "name,description,images,tracks(items(track(id,name,artists(name),album(name,images),external_urls)),next,total)"
   );
+
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
   if (response.status === 404) {
     throw new Error("Playlist not found. Make sure the playlist is public.");
