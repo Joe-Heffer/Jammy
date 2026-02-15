@@ -12,6 +12,10 @@ pnpm dev                  # Start dev server
 pnpm build                # Production build
 pnpm lint                 # Run ESLint
 pnpm exec tsc --noEmit    # Type check (what CI runs)
+pnpm test                 # Run tests
+pnpm test:watch           # Run tests in watch mode
+pnpm test:coverage        # Run tests with coverage report
+pnpm test:ui              # Run tests with UI
 pnpm db:generate          # Generate Drizzle migrations
 pnpm db:migrate           # Apply migrations
 pnpm db:push              # Push schema to database (sync)
@@ -25,9 +29,10 @@ pnpm db:studio            # Open Drizzle Studio GUI
 - **UI:** React 19, Tailwind CSS v4
 - **ORM:** Drizzle ORM with PostgreSQL (Neon serverless)
 - **Package manager:** pnpm (v9) - always use pnpm, not npm/yarn
+- **Testing:** Vitest with React Testing Library and coverage reporting
 - **Linting:** ESLint 9 (flat config) extending `next/core-web-vitals` and `next/typescript`
 - **Deployment:** Vercel with auto-deploy on push to `main`
-- **CI:** GitHub Actions (lint, type check, build)
+- **CI:** GitHub Actions (lint, type check, test with coverage, build)
 
 ## Project Structure
 
@@ -127,14 +132,54 @@ GitHub Actions (`.github/workflows/deploy.yml`) runs on push/PR to `main`:
 1. Install dependencies (`pnpm install --frozen-lockfile`)
 2. Lint (`pnpm lint`)
 3. Type check (`pnpm exec tsc --noEmit`)
-4. Build (`pnpm build`)
-5. Upload build artifacts (push to main only)
+4. Run tests with coverage (`pnpm test:coverage`)
+5. Upload coverage reports as artifacts
+6. Generate coverage summary (PRs only)
+7. Build (`pnpm build`)
+8. Upload build artifacts (push to main only)
 
-Before pushing changes, verify they pass: `pnpm lint && pnpm exec tsc --noEmit && pnpm build`
+Before pushing changes, verify they pass: `pnpm lint && pnpm exec tsc --noEmit && pnpm test:coverage && pnpm build`
 
 ## Testing
 
-No testing framework is currently configured. There are no unit or integration tests.
+The project uses **Vitest** as the test runner with React Testing Library for component testing. Coverage reporting is enabled via `@vitest/coverage-v8`.
+
+### Test Configuration
+- **Framework:** Vitest 4.x with jsdom environment
+- **React testing:** @testing-library/react for component tests
+- **Coverage:** V8 provider with HTML, LCOV, JSON, and text reporters
+- **Thresholds:** 80% for lines, functions, branches, and statements
+- **Setup file:** `vitest.setup.ts` configures jest-dom matchers
+- **Config file:** `vitest.config.ts`
+
+### Running Tests
+```bash
+pnpm test              # Run all tests once
+pnpm test:watch        # Run tests in watch mode
+pnpm test:coverage     # Run tests with coverage report
+pnpm test:ui           # Run tests with Vitest UI
+```
+
+### Writing Tests
+- Place test files next to the component being tested (e.g., `StatusBadge.test.tsx` next to `StatusBadge.tsx`)
+- Use `.test.tsx` or `.test.ts` extension
+- Import from `vitest` for test functions (`describe`, `it`, `expect`)
+- Import from `@testing-library/react` for rendering and querying
+- Use `@testing-library/jest-dom` matchers (e.g., `toBeInTheDocument()`)
+
+### Coverage Reports
+- Coverage reports are generated in the `coverage/` directory
+- HTML report: `coverage/index.html`
+- LCOV report: `coverage/lcov.info`
+- JSON summary: `coverage/coverage-summary.json`
+- CI uploads coverage as artifacts and shows summary in PR checks
+
+### Excluded from Coverage
+- `node_modules/`, `.next/`, `drizzle/`
+- Config files (`*.config.ts`, `*.config.js`)
+- Type declaration files (`*.d.ts`)
+- Database schema (`src/lib/db/schema.ts`)
+- Middleware (`src/middleware.ts`) - tested via integration
 
 ## Common Tasks
 
