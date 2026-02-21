@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { songs } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
+import { buildChordifyUrl } from "@/lib/chordify";
 
 /**
  * GET /api/songs
@@ -127,7 +128,7 @@ export async function POST(request: NextRequest) {
       songsterrBassId: body.songsterrBassId || null,
       songsterrDrumId: body.songsterrDrumId || null,
       geniusUrl: body.geniusUrl || null,
-      chordChartUrl: body.chordChartUrl || null,
+      chordChartUrl: body.chordChartUrl || buildChordifyUrl(body.title, body.artist),
       notes: body.notes || null,
       addedBy: body.addedBy || null,
     };

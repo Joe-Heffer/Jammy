@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { songs } from "@/lib/db/schema";
 import { extractPlaylistId, getPlaylistTracks } from "@/lib/spotify";
+import { buildChordifyUrl } from "@/lib/chordify";
 
 /**
  * POST /api/spotify/sync
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
           spotifyId: track.spotifyId,
           spotifyUrl: track.spotifyUrl,
           coverArtUrl: track.coverArtUrl,
+          chordChartUrl: buildChordifyUrl(track.title, track.artist),
           addedBy: body.addedBy || null,
         })
         .returning();

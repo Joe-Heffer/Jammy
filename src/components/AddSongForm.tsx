@@ -251,10 +251,10 @@ export function AddSongForm() {
             label="Chord Chart URL"
             name="chordChartUrl"
             type="url"
-            placeholder="https://..."
+            placeholder="Auto-filled from Chordify"
             value={formData.chordChartUrl}
             onChange={handleChange}
-            helperText="Link to a chord chart (Ultimate Guitar, Chordify, etc.)"
+            helperText="Leave blank to auto-generate a Chordify search link"
           />
         </div>
       </fieldset>
